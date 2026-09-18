@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💛 Día de las Flores Amarillas</title>
+  <meta name="description" content="Una sorpresa especial para el Día de las Flores Amarillas. Un mensaje lleno de amor y alegría para ti." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Tokens ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark:    #1a1209;
+      --bg-light:   #fffbef;
+      --bg-mid:     #fff8d6;
+      --yellow-500: #f5c518;
+      --yellow-300: #ffe566;
+      --yellow-100: #fff9c4;
+      --green-600:  #3d7a2e;
+      --brown-800:  #4a2a0a;
+      --text-dark:  #2d1f06;
+      --text-mid:   #5c3d12;
+      --shadow-soft: 0 4px 24px rgba(80,50,0,.13);
+      --transition-bg: background 1.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ─── Body ───────────────────────────────────────────── */
+    body {
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg-dark);
+      transition: var(--transition-bg);
+      overflow-x: hidden;
+      position: relative;
+    }
+    body.revealed {
+      background: linear-gradient(160deg, #fffde4 0%, #fff3b0 40%, #ffe97a 100%);
+    }
+
+    /* ─── Partículas flotantes ───────────────────────────── */
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .petal {
+      position: absolute;
+      width: 10px; height: 14px;
+      background: var(--yellow-300);
+      border-radius: 60% 40% 60% 40%;
+      opacity: 0;
+      animation: floatPetal linear infinite;
+    }
+    @keyframes floatPetal {
+      0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: .7; }
+      90%  { opacity: .5; }
+      100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ─── Pantalla de inicio ─────────────────────────────── */
+    #splash {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 100;
+      background: radial-gradient(ellipse at center, #2a1c05 0%, #0d0a02 100%);
+      transition: opacity .9s ease, visibility .9s ease;
+    }
+    #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .splash-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      color: var(--yellow-300);
+      text-shadow: 0 0 30px rgba(255,220,40,.5);
+      margin-bottom: 2rem;
+      letter-spacing: .04em;
+      animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%,100% { text-shadow: 0 0 20px rgba(255,220,40,.4); }
+      50%      { text-shadow: 0 0 50px rgba(255,220,40,.9), 0 0 80px rgba(255,200,0,.4); }
+    }
+
+    #btn-start {
+      cursor: pointer;
+      padding: 1rem 2.6rem;
+      font-size: 1.15rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      letter-spacing: .05em;
+      color: var(--brown-800);
+      background: linear-gradient(135deg, var(--yellow-300) 0%, var(--yellow-500) 100%);
+      border: none;
+      border-radius: 50px;
+      box-shadow: 0 6px 30px rgba(245,197,24,.5), 0 2px 8px rgba(0,0,0,.3);
+      transition: transform .18s ease, box-shadow .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    #btn-start::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.35) 0%, transparent 60%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    #btn-start:hover  { transform: scale(1.07) translateY(-2px); box-shadow: 0 12px 40px rgba(245,197,24,.65); }
+    #btn-start:active { transform: scale(.97); }
+
+    .emoji-deco { font-size: 2.5rem; margin-bottom: 1rem; animation: bounce 1.6s ease-in-out infinite; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ─── Contenido principal ────────────────────────────── */
+    #main-content {
+      position: relative; z-index: 10;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      padding: 2rem 1.5rem 0;
+      gap: 1.5rem;
+      opacity: 0;
+      transition: opacity 1s ease .3s;
+    }
+    #main-content.visible { opacity: 1; }
+
+    /* ─── Título superior ────────────────────────────────── */
+    #page-title {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--brown-800);
+      text-shadow: 0 2px 8px rgba(100,60,0,.15);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity .8s ease .5s, transform .8s ease .5s;
+    }
+    #page-title.show { opacity: 1; transform: translateY(0); }
+
+    /* ─── Columna izquierda: Mensaje de escritura ────────── */
+    #message-col {
+      grid-column: 1;
+      padding-top: 1rem;
+      max-width: 420px;
+      justify-self: end;
+    }
+
+    #typewriter-box {
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(245,197,24,.35);
+      border-radius: 18px;
+      padding: 1.8rem 2rem;
+      box-shadow: var(--shadow-soft), 0 0 0 4px rgba(255,230,80,.1);
+    }
+    #typewriter-box h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: var(--green-600);
+      margin-bottom: .8rem;
+    }
+    #typed-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      min-height: 2em;
+      white-space: pre-wrap;
+    }
+    #cursor {
+      display: inline-block;
+      width: 2px; height: 1.1em;
+      background: var(--yellow-500);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink .75s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ─── Columna central: Ramo ──────────────────────────── */
+    #ramo-col {
+      grid-column: 2;
+      position: relative;
+      display: flex; align-items: flex-end; justify-content: center;
+      height: 520px;
+      width: 340px;
+    }
+
+    #ramo-img {
+      width: 320px;
+      max-width: 90vw;
+      transform: translateY(120%);
+      opacity: 0;
+      filter: drop-shadow(0 20px 30px rgba(180,130,0,.3));
+    }
+    #ramo-img.animate-up {
+      animation: ramoEntrada 1.6s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    @keyframes ramoEntrada {
+      0%   { transform: translateY(120%); opacity: 0; }
+      20%  { opacity: 1; }
+      100% { transform: translateY(0);    opacity: 1; }
+    }
+
+    /* ─── Columna derecha: Post-its ──────────────────────── */
+    #postits-col {
+      grid-column: 3;
+      padding-top: 1rem;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .postit {
+      position: relative;
+      padding: 1.3rem 1.4rem;
+      border-radius: 3px;
+      box-shadow:
+        4px 5px 14px rgba(0,0,0,.16),
+        1px 1px 0 rgba(255,255,255,.6) inset;
+      font-size: .95rem;
+      line-height: 1.6;
+      color: #333;
+      opacity: 0;
+      transform: translateX(80px) scale(.85);
+      transition: opacity .6s ease, transform .6s cubic-bezier(.34,1.56,.64,1);
+      clip-path: polygon(
+        0% 2%, 1% 0%, 3% 1%, 97% 0%, 99% 1%, 100% 3%,
+        100% 97%, 98% 100%, 2% 100%, 0% 98%
+      );
+    }
+    .postit::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 28px;
+      background: rgba(0,0,0,.06);
+      border-radius: 3px 3px 0 0;
+    }
+    .postit.show { opacity: 1; }
+
+    .postit-1 { background: #fff9a3; transform: rotate(-2.8deg) translateX(80px) scale(.85); }
+    .postit-2 { background: #ffd6e7; transform: rotate(1.9deg)  translateX(80px) scale(.85); }
+    .postit-3 { background: #c8f5d8; transform: rotate(-1.4deg) translateX(80px) scale(.85); }
+
+    .postit-1.show { transform: rotate(-2.8deg) translateX(0) scale(1); }
+    .postit-2.show { transform: rotate(1.9deg)  translateX(0) scale(1); }
+    .postit-3.show { transform: rotate(-1.4deg) translateX(0) scale(1); }
+
+    .postit-emoji { font-size: 1.6rem; display: block; margin-bottom: .4rem; }
+    .postit strong { display: block; font-weight: 700; font-size: 1.05rem; margin-bottom: .3rem; color: #222; }
+
+    /* ─── Audio oculto ───────────────────────────────────── */
+    #audio-bg { display: none; }
+
+    /* ─── Confeti ────────────────────────────────────────── */
+    .confetti-piece {
+      position: fixed;
+      width: 8px; height: 14px;
+      border-radius: 2px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 200;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(110vh) rotate(900deg); opacity: 0; }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 860px) {
+      #main-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        align-items: center;
+        justify-items: center;
+        padding-bottom: 2rem;
+      }
+      #page-title  { grid-column: 1; }
+      #message-col { grid-column: 1; max-width: 90vw; justify-self: center; order: 3; }
+      #ramo-col    { grid-column: 1; order: 2; height: 360px; width: 260px; }
+      #postits-col { grid-column: 1; order: 4; max-width: 90vw; flex-direction: row; flex-wrap: wrap; justify-content: center; }
+      #ramo-img    { width: 240px; }
+      .postit      { max-width: 260px; flex: 1 1 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Partículas flotantes (pétalos) -->
+  <div id="particles"></div>
+
+  <!-- Audio de fondo (coloca tu archivo de música en src="musica.mp3") -->
+  <audio id="audio-bg" loop>
+    <!-- <source src="musica.mp3" type="audio/mpeg" /> -->
+  </audio>
+
+  <!-- ══════════════════════════════════════════
+       PANTALLA DE INICIO (SPLASH)
+  ══════════════════════════════════════════ -->
+  <div id="splash" role="dialog" aria-modal="true" aria-labelledby="splash-heading">
+    <div class="emoji-deco" aria-hidden="true">🌻</div>
+    <h1 id="splash-heading" class="splash-title">Día de las Flores Amarillas</h1>
+    <button id="btn-start" aria-label="Abrir sorpresa">
+      🌼 Haz clic para tu sorpresa
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+  ══════════════════════════════════════════ -->
+  <main id="main-content" aria-live="polite">
+
+    <!-- Título de página -->
+    <h1 id="page-title">💛 Para ti, con todo mi cariño 💛</h1>
+
+    <!-- Columna izquierda: Mensaje escrito letra a letra -->
+    <section id="message-col" aria-label="Mensaje especial">
+      <div id="typewriter-box">
+        <h2>💌 Un mensaje para ti</h2>
+        <p id="typed-text"></p><span id="cursor" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <!-- Columna central: Ramo de flores -->
+    <div id="ramo-col" aria-label="Ramo de flores amarillas">
+      <img id="ramo-img" src="ramo.svg" alt="Hermoso ramo de flores amarillas" />
+    </div>
+
+    <!-- Columna derecha: Post-its -->
+    <section id="postits-col" aria-label="Notas adhesivas">
+
+      <article class="postit postit-1" id="postit-1">
+        <span class="postit-emoji">🌻</span>
+        <strong>¡Eres increíble!</strong>
+        Como el sol que hace brillar cada flor, tú iluminas cada rincón a donde llegas. ✨
+      </article>
+
+      <article class="postit postit-2" id="postit-2">
+        <span class="postit-emoji">💛</span>
+        <strong>Flores para el alma</strong>
+        Las flores amarillas traen felicidad, alegría y un abrazo cálido… igual que tú 🥰
+      </article>
+
+      <article class="postit postit-3" id="postit-3">
+        <span class="postit-emoji">🌼</span>
+        <strong>¡Hoy es tu día!</strong>
+        Recibe estas flores con todo el amor del mundo. ¡Que siempre florezcas! 🌱💫
+      </article>
+
+    </section>
+
+  </main>
+
+  <script>
+    /* ════════════════════════════════════════════════════
+       CONFIGURACIÓN
+    ════════════════════════════════════════════════════ */
+    const MENSAJE = `Hoy, 21 de septiembre, el mundo se viste de amarillo para recordarnos que la alegría, la amistad y el amor merecen ser celebrados con flores.
+
+Estas flores amarillas son para ti: por tu sonrisa contagiosa, por tu manera única de ver la vida, por cada momento compartido que guardo como un tesoro.
+
+Las flores amarillas simbolizan la luz que traes a los demás. Y tú, sin saberlo, eres esa luz para quienes te rodean.
+
+Que este día te llene de color, de buenas noticias y de todo lo que mereces. Porque te mereces lo mejor… siempre. 💛🌻`;
+
+    const TYPING_SPEED_MIN = 28;
+    const TYPING_SPEED_MAX = 80;
+    const RAMO_ANIMATION_DURATION = 1600;
+    const DELAY_AFTER_RAMO = 1000;
+    const POSTIT_DELAYS = [200, 600, 1000];
+
+    /* ════════════════════════════════════════════════════
+       REFERENCIAS DOM
+    ════════════════════════════════════════════════════ */
+    const splash      = document.getElementById('splash');
+    const btnStart    = document.getElementById('btn-start');
+    const mainContent = document.getElementById('main-content');
+    const pageTitle   = document.getElementById('page-title');
+    const ramoImg     = document.getElementById('ramo-img');
+    const typedText   = document.getElementById('typed-text');
+    const audioBg     = document.getElementById('audio-bg');
+    const particles   = document.getElementById('particles');
+    const postits     = document.querySelectorAll('.postit');
+
+    /* ════════════════════════════════════════════════════
+       UTILIDADES
+    ════════════════════════════════════════════════════ */
+    const rand = (min, max) => Math.random() * (max - min) + min;
+    const wait = (ms) => new Promise(res => setTimeout(res, ms));
+
+    /* ════════════════════════════════════════════════════
+       PARTÍCULAS (PÉTALOS)
+    ════════════════════════════════════════════════════ */
+    function createParticles() {
+      const colors = ['#FFD700','#FFE566','#FFF176','#FFEC6E','#FFC107','#fff9c4'];
+      for (let i = 0; i < 22; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.cssText = `
+          left: ${rand(0,100)}vw;
+          width: ${rand(7,14)}px;
+          height: ${rand(10,20)}px;
+          background: ${colors[Math.floor(rand(0,colors.length))]};
+          animation-duration: ${rand(7,16)}s;
+          animation-delay: ${rand(0,8)}s;
+          border-radius: ${rand(40,70)}% ${rand(30,60)}% ${rand(40,70)}% ${rand(30,60)}%;
+          opacity: 0;
+        `;
+        particles.appendChild(petal);
+      }
+    }
+
+    /* ════════════════════════════════════════════════════
+       CONFETI
+    ════════════════════════════════════════════════════ */
+    function launchConfetti() {
+      const colors = ['#FFD700','#FF6B9D','#A8E063','#56CCF2','#F2994A','#ffffff','#FFE566'];
+      for (let i = 0; i < 70; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.cssText = `
+          left: ${rand(10,90)}vw;
+          top: -20px;
+          background: ${colors[Math.floor(rand(0,colors.length))]};
+          animation-duration: ${rand(2.5,5)}s;
+          animation-delay: ${rand(0,2)}s;
+          width: ${rand(6,12)}px;
+          height: ${rand(10,18)}px;
+          transform: rotate(${rand(0,360)}deg);
+        `;
+        document.body.appendChild(piece);
+        piece.addEventListener('animationend', () => piece.remove());
+      }
+    }
+
+    /* ════════════════════════════════════════════════════
+       EFECTO DE ESCRITURA (TYPEWRITER)
+    ════════════════════════════════════════════════════ */
+    async function typeMessage(text) {
+      typedText.textContent = '';
+      for (const char of text) {
+        typedText.textContent += char;
+        let delay = rand(TYPING_SPEED_MIN, TYPING_SPEED_MAX);
+        if ('.!?…'.includes(char)) delay = rand(200, 450);
+        else if (',;:'.includes(char)) delay = rand(100, 200);
+        else if (char === '\n') delay = rand(250, 500);
+        await wait(delay);
+      }
+      const cursorEl = document.getElementById('cursor');
+      if (cursorEl) cursorEl.style.animation = 'none';
+    }
+
+    /* ════════════════════════════════════════════════════
+       MOSTRAR POST-ITS
+    ════════════════════════════════════════════════════ */
+    function showPostits() {
+      postits.forEach((postit, i) => {
+        setTimeout(() => {
+          postit.classList.add('show');
+        }, POSTIT_DELAYS[i]);
+      });
+    }
+
+    /* ════════════════════════════════════════════════════
+       FLUJO PRINCIPAL
+    ════════════════════════════════════════════════════ */
+    async function startExperience() {
+      btnStart.disabled = true;
+      splash.classList.add('hidden');
+      document.body.classList.add('revealed');
+      mainContent.classList.add('visible');
+      pageTitle.classList.add('show');
+
+      try {
+        if (audioBg.querySelector('source')) await audioBg.play();
+      } catch (e) { /* sin audio cargado */ }
+
+      createParticles();
+      launchConfetti();
+
+      ramoImg.classList.add('animate-up');
+
+      await wait(RAMO_ANIMATION_DURATION + DELAY_AFTER_RAMO);
+
+      showPostits();
+      await typeMessage(MENSAJE);
+    }
+
+    /* ════════════════════════════════════════════════════
+       EVENTOS
+    ════════════════════════════════════════════════════ */
+    btnStart.addEventListener('click', startExperience);
+
+    ramoImg.addEventListener('mouseenter', () => {
+      ramoImg.style.transition = 'filter .3s ease, transform .3s ease';
+      ramoImg.style.filter = 'drop-shadow(0 24px 40px rgba(220,170,0,.5)) brightness(1.08)';
+      ramoImg.style.transform = 'translateY(-8px) scale(1.03)';
+    });
+    ramoImg.addEventListener('mouseleave', () => {
+      ramoImg.style.filter = 'drop-shadow(0 20px 30px rgba(180,130,0,.3))';
+      ramoImg.style.transform = 'translateY(0) scale(1)';
+    });
+  </script>
+</body>
+</html>
