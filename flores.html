@@ -718,6 +718,8 @@ Solo espero estarte haciendo feliz como tu me haces feliz a mi. 💛🌻`;
             document.body.classList.add('revealed');
             mainContent.classList.add('visible');
             pageTitle.classList.add('show');
+            // Mostrar reproductor Spotify con ligero retraso
+            setTimeout(() => document.getElementById('spotify-player').classList.add('visible'), 800);
 
             try {
                 if (audioBg.querySelector('source')) await audioBg.play();
@@ -762,18 +764,7 @@ Solo espero estarte haciendo feliz como tu me haces feliz a mi. 💛🌻`;
             toggleLabel.textContent = playerMinimized ? '🎵 Abrir música' : '🎵 Minimizar';
         });
 
-        // Mostrar el reproductor al mismo tiempo que el contenido principal
-        const _origStart = startExperience;
-        // Patch: mostrar player tras el reveal
-        const _playerShowObserver = new MutationObserver((mutations) => {
-            for (const m of mutations) {
-                if (m.target.classList.contains('visible')) {
-                    setTimeout(() => spotifyPlayer.classList.add('visible'), 800);
-                    _playerShowObserver.disconnect();
-                }
-            }
-        });
-        _playerShowObserver.observe(mainContent, { attributes: true, attributeFilter: ['class'] });
+        // El player se muestra desde startExperience directamente
     </script>
 
     <!-- ── Reproductor Spotify flotante ─────────────────────── -->
