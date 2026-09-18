@@ -472,6 +472,66 @@
                 flex: 1 1 220px;
             }
         }
+
+        /* ─── Reproductor Spotify flotante ──────────────────── */
+        #spotify-player {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: .5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .7s ease, transform .7s cubic-bezier(.34,1.56,.64,1);
+            pointer-events: none;
+        }
+        #spotify-player.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        #spotify-player.minimized #spotify-iframe-wrap { display: none; }
+
+        #spotify-toggle-btn {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .45rem 1rem;
+            font-family: 'Nunito', sans-serif;
+            font-size: .82rem;
+            font-weight: 700;
+            color: #1a1209;
+            background: linear-gradient(135deg, #ffe566 0%, #f5c518 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,.2);
+            transition: transform .15s ease, box-shadow .15s ease;
+            white-space: nowrap;
+        }
+        #spotify-toggle-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 22px rgba(0,0,0,.25);
+        }
+        #spotify-toggle-btn .music-icon { font-size: 1rem; animation: spin 3s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #spotify-iframe-wrap {
+            background: rgba(255,255,255,.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(245,197,24,.3);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,.2);
+        }
+        #spotify-iframe-wrap iframe {
+            display: block;
+            border: none;
+            border-radius: 16px;
+        }
     </style>
 </head>
 
@@ -688,7 +748,53 @@ Solo espero estarte haciendo feliz como tu me haces feliz a mi. 💛🌻`;
             ramoImg.style.filter = 'drop-shadow(0 20px 30px rgba(180,130,0,.3))';
             ramoImg.style.transform = 'translateY(0) scale(1)';
         });
+        /* ════════════════════════════════════════════════════
+           REPRODUCTOR SPOTIFY
+        ════════════════════════════════════════════════════ */
+        const spotifyPlayer = document.getElementById('spotify-player');
+        const spotifyToggleBtn = document.getElementById('spotify-toggle-btn');
+        const toggleLabel = document.getElementById('spotify-toggle-label');
+        let playerMinimized = false;
+
+        spotifyToggleBtn.addEventListener('click', () => {
+            playerMinimized = !playerMinimized;
+            spotifyPlayer.classList.toggle('minimized', playerMinimized);
+            toggleLabel.textContent = playerMinimized ? '🎵 Abrir música' : '🎵 Minimizar';
+        });
+
+        // Mostrar el reproductor al mismo tiempo que el contenido principal
+        const _origStart = startExperience;
+        // Patch: mostrar player tras el reveal
+        const _playerShowObserver = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.target.classList.contains('visible')) {
+                    setTimeout(() => spotifyPlayer.classList.add('visible'), 800);
+                    _playerShowObserver.disconnect();
+                }
+            }
+        });
+        _playerShowObserver.observe(mainContent, { attributes: true, attributeFilter: ['class'] });
     </script>
+
+    <!-- ── Reproductor Spotify flotante ─────────────────────── -->
+    <div id="spotify-player" aria-label="Reproductor de música">
+        <button id="spotify-toggle-btn" aria-label="Minimizar o abrir reproductor">
+            <span class="music-icon">🎵</span>
+            <span id="spotify-toggle-label">🎵 Minimizar</span>
+        </button>
+        <div id="spotify-iframe-wrap">
+            <iframe
+                id="spotify-iframe"
+                src="https://open.spotify.com/embed/track/1dS4l6xmdgEhCZTAhdOm4N?utm_source=generator&theme=0"
+                width="300"
+                height="152"
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+                title="Spotify – canción especial">
+            </iframe>
+        </div>
+    </div>
+
 </body>
 
 </html>
